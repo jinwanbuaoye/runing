@@ -278,3 +278,65 @@ class Solution {
     }
     
 }
+
+--------------------------------------------------------------------------------------------------------------
+给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 "" 。
+
+ 
+
+注意：
+
+对于 t 中重复字符，我们寻找的子字符串中该字符数量必须不少于 t 中该字符数量。
+如果 s 中存在这样的子串，我们保证它是唯一的答案。
+ 
+
+示例 1：
+
+输入：s = "ADOBECODEBANC", t = "ABC"
+输出："BANC"
+解释：最小覆盖子串 "BANC" 包含来自字符串 t 的 'A'、'B' 和 'C'。
+
+
+class Solution {
+    public String minWindow(String ss, String tt) {
+        char[] s = ss.toCharArray();
+        char[] t = tt.toCharArray();
+
+        int kinds = 0;
+
+        int[] hash1 = new int[128];
+        int[] hash2 = new int[128];
+        for(char ch : t){
+            if(hash1[ch]++ == 0){
+                kinds++;
+            }
+        }
+
+        int minlen = Integer.MAX_VALUE, begin = -1;
+
+        for(int left = 0,right = 0,count = 0;right < s.length;right++){
+            char in = s[right];
+
+            if(++hash2[in] == hash1[in]){
+                count++;
+            }
+
+            while(kinds == count){
+                if(right - left + 1 < minlen){
+                    begin = left;
+                    minlen = right - left + 1;
+                }
+
+                char out = s[left++];
+                if(hash2[out]-- == hash1[out]){
+                    count--;
+                }
+            }
+        }
+        if(begin == -1){ 
+            return new String();
+        }else {
+            return ss.substring(begin, begin + minlen);
+        }
+    }
+}
