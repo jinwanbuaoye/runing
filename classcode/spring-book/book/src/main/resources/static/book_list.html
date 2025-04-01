@@ -39,23 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                
-                <tr>
-                    <td><input type="checkbox" name="selectBook" value="1" id="selectBook" class="book-select"></td>
-                    <td>4</td>
-                    <td>大秦帝国第四册</td>
-                    <td>我是作者</td>
-                    <td>23</td>
-                    <td>33.00</td>
-                    <td>北京出版社</td>
-                    <td>可借阅</td>
-                    <td>
-                        <div class="op">
-                            <a href="book_update.html?bookId=4">修改</a>
-                            <a href="javascript:void(0)" onclick="deleteBook(4)">删除</a>
-                        </div>
-                    </td>
-                </tr>
+
             </tbody>
         </table>
 
@@ -68,11 +52,14 @@
             function getBookList() {
                 // 获取图书列表数据
                 $.ajax({
-                    url: "/book/getBookList",
-                    type: "GET",
-                    success: function (books) {
+                    type: "get",
+                    url: "/book/getBookListByPage" + location.search,
+                    success: function (result) {
+                        console.log(result);
                         var finalHtml = "";
-                        for(var book of books){
+                        //加载列表
+                        
+                        for (var book of result.records) {
                             finalHtml += '<tr>'
                             finalHtml += '<td><input type="checkbox" name="selectBook" value="' + book.id + '" id="selectBook" class="book-select"></td>';
                             finalHtml += '<td>' + book.id + '</td>';
@@ -85,31 +72,34 @@
                             finalHtml += '<td><div class="op">';
                             finalHtml += '<a href="book_update.html?bookId=' + book.id + '">修改</a>';
                             finalHtml += '<a href="javascript:void(0)" onclick="deleteBook(' + book.id + ')">删除</a>';
-                            finalHtml += '</div></td>';
+                            finalHtml += '</div></td></tr>';
                         }
-                        console.log(finalHtml);
                         $("tbody").html(finalHtml);
 
+                        //翻页信息
+                        $("#pageContainer").jqPaginator({
+                            totalCounts: result.total, //总记录数
+                            pageSize: 10,    //每页的个数
+                            visiblePages: 5, //可视页数
+                            currentPage: result.pageRequest.currentPage,  //当前页码
+                            first: '<li class="page-item"><a class="page-link">首页</a></li>',
+                            prev: '<li class="page-item"><a class="page-link" href="javascript:void(0);">上一页<\/a><\/li>',
+                            next: '<li class="page-item"><a class="page-link" href="javascript:void(0);">下一页<\/a><\/li>',
+                            last: '<li class="page-item"><a class="page-link" href="javascript:void(0);">最后一页<\/a><\/li>',
+                            page: '<li class="page-item"><a class="page-link" href="javascript:void(0);">{{page}}<\/a><\/li>',
+                            //页面初始化和页码点击时都会执行
+                            onPageChange: function (page, type) {
+                                console.log("第" + page + "页, 类型:" + type);
+                                if (type == "change"){
+                                    location.href = "book_list.html?currentPage=" + page;
+                                }
+                            }
+                        });
                     }
 
-            });
-        }
-            //翻页信息
-            $("#pageContainer").jqPaginator({
-                totalCounts: 100, //总记录数
-                pageSize: 10,    //每页的个数
-                visiblePages: 5, //可视页数
-                currentPage: 1,  //当前页码
-                first: '<li class="page-item"><a class="page-link">首页</a></li>',
-                prev: '<li class="page-item"><a class="page-link" href="javascript:void(0);">上一页<\/a><\/li>',
-                next: '<li class="page-item"><a class="page-link" href="javascript:void(0);">下一页<\/a><\/li>',
-                last: '<li class="page-item"><a class="page-link" href="javascript:void(0);">最后一页<\/a><\/li>',
-                page: '<li class="page-item"><a class="page-link" href="javascript:void(0);">{{page}}<\/a><\/li>',
-                //页面初始化和页码点击时都会执行
-                onPageChange: function (page, type) {
-                    console.log("第" + page + "页, 类型:" + type);
-                }
-            });
+                });
+            }
+
             function deleteBook(id) {
                 var isDelete = confirm("确认删除?");
                 if (isDelete) {

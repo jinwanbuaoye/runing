@@ -1,7 +1,10 @@
 package com.bite.book.service;
 
-import com.bite.book.dao.BookDao;
+import com.bite.book.mapper.BookInfoMapper;
 import com.bite.book.model.BookInfo;
+import com.bite.book.model.PageRequest;
+import com.bite.book.model.PageResult;
+import org.apache.ibatis.annotations.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -11,17 +14,19 @@ import java.util.List;
 @Service//告诉spring,帮我们存对象
 public class BookService {
     @Autowired
-    private BookDao bookDao;
-    public List<BookInfo> getBookList(){
+    private BookInfoMapper bookInfoMapper;
 
-        List<BookInfo> bookInfos = bookDao.mockDate();
-        for(BookInfo bookInfo: bookInfos){
-            if (bookInfo.getStatus()==1){
-                bookInfo.setStatusCN("可借阅");
-            }else {
-                bookInfo.setStatusCN("不可借阅");
-            }
+    public PageResult<BookInfo> selectBookInfoByPage(PageRequest pageRequest) {
+        if(pageRequest == null){
+            return null;
         }
-        return bookInfos;
+        //获取总记录数
+        Integer count = bookInfoMapper.count();
+
+        //获取当前记录
+        List<BookInfo> bookinfos = bookInfoMapper.selectBookInfoByPage(pageRequest.getOffset(), pageRequest.getPageSize());
+
+
+        return new PageResult<>(bookinfos,count,pageRequest);
     }
 }
