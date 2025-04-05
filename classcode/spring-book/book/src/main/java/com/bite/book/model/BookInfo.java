@@ -1,5 +1,7 @@
 package com.bite.book.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,6 +18,7 @@ public class BookInfo {
     //数量
     private Integer count;
     //定价
+    @JsonFormat(shape = JsonFormat.Shape.STRING)//前端展示精度
     private BigDecimal price;
     //出版社
     private String publish;

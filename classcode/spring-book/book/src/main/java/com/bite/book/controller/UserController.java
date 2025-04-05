@@ -1,5 +1,6 @@
 package com.bite.book.controller;
 
+import com.bite.book.constant.Constans;
 import com.bite.book.model.UserInfo;
 import com.bite.book.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class UserController {
         if(password.equals(userInfo.getPassword())){
             //存储在Session中
             userInfo.setPassword("");
-            session.setAttribute("userName",userInfo);
+            session.setAttribute(Constans.SESSION_USER_KEY,userInfo);
             return true;
         }
         //账号密码错误
