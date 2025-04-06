@@ -34,7 +34,7 @@ public class Result {
         Result result = new Result();
         result.setCode(ResultCode.FAIL);
         result.setErrorMessage(msg);
-        result.setData("");
+        result.setData(null);
         return result;
     }
 
