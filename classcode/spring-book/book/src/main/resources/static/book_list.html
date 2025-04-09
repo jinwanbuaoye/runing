@@ -55,8 +55,8 @@
                     type: "get",
                     url: "/book/getBookListByPage" + location.search,
                     success: function (result) {
-                        if(result.code=="UNLOGIN"){
-                            location.href="login.html";
+                        if (result.code == "UNLOGIN") {
+                            location.href = "login.html";
                         }
 
 
@@ -103,8 +103,8 @@
                         });
                     },
                     error: function (error) {
-                        if(error.status==401){
-                            location.href="login.html";
+                        if (error.status == 401) {
+                            location.href = "login.html";
                         }
                         console.log(error);
                     }
@@ -123,9 +123,18 @@
                             id: id,
                             status: 0
                         },
-                        success: function () {
-                            //重新刷新⻚⾯
-                            location.href = "book_list.html"
+                        success: function (result) {
+                            if (result.code == "SUCCESS" || result.data == true) {
+                                alert("删除成功");
+                                //重新刷新⻚⾯
+                                location.href = "book_list.html"
+                            }
+                        },
+                        error: function (error) {
+                            if (error != null && error.status == 401) {
+                                //⽤⼾未登录
+                                location.href = "login.html";
+                            }
                         }
                     });
                     alert("删除成功");
@@ -145,12 +154,16 @@
                         type: "post",
                         url: "/book/batchDelete?ids=" + ids,
                         success: function (result) {
-                            if (result=="") {
+                            if (result.code == "SUCCESS" || result.data == true) {
                                 alert("删除成功");
                                 //重新刷新⻚⾯
                                 location.href = "book_list.html"
-                            }else{
-                                alert("删除失败:" + result);
+                            }
+                        },
+                        error: function (error) {
+                            if (error != null && error.status == 401) {
+                                //⽤⼾未登录
+                                location.href = "login.html";
                             }
                         }
                     });
