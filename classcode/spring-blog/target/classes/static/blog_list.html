@@ -75,17 +75,49 @@
                             finalHtml += '<div class="title">' + blog.title + '</div>';
                             finalHtml += '<div class="date">' + blog.createTime + '</div>';
                             finalHtml += '<div class="desc">' + blog.content + '</div>';
-                            finalHtml += '<a class="detail" href="blog_detail.html?blogId='+blog.id+'">查看全文&gt;&gt;</a>';
+                            finalHtml += '<a class="detail" href="blog_detail.html?blogId=' + blog.id + '">查看全文&gt;&gt;</a>';
                             finalHtml += '</div>';
                         }
                         $(".right").html(finalHtml);
                     }
+                },
+                error: function (error) {
+                    if (error != null && error.status == 401) {
+                        alert("请先登录");
+                        window.location.href = "blog_login.html";
+                    }
+
                 }
-                // ,
-                // error: function () {
-                //     console.log("后端返回失败");
-                // }
             });
+        }
+        //显示当前登录用户的信息
+
+        var userUrl = "/user/getUserInfo";
+        getUserInfo(userUrl);
+
+        // getUserInfo();
+        // function getUserInfo() {
+        //     $.ajax({
+        //         type: "get",
+        //         url: "/user/getUserInfo",
+        //         success: function (result) {
+        //             if (result.code == 200 && result.data != null) {
+        //                 $(".left .card h3").text(result.data.userName);
+        //                 $(".left .card a").attr("href", result.data.githubUrl);
+        //             }else{
+        //                 alert("请先登录");
+        //                 window.location.href = "blog_login.html";
+        //             }
+        //         },
+        //         error: function (err) {
+        //         }
+        //     });
+        // }
+
+        function logout() {
+            //删除Cookie, 设置Cookie为空即可
+            localStorage.removeItem("user_token");
+            location.href = "/blog_login.html";
         }
     </script>
 </body>
