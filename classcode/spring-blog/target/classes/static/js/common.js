@@ -3,20 +3,20 @@ $(document).ajaxSend(function (e, xhr, opt) {
     xhr.setRequestHeader("user_token", user_token);
 });
 
-        function getUserInfo() {
-            $.ajax({
-                type: "get",
-                url: "/user/getUserInfo",
-                success: function (result) {
-                    if (result.code == 200 && result.data != null) {
-                        $(".left .card h3").text(result.data.userName);
-                        $(".left .card a").attr("href", result.data.githubUrl);
-                    }else{
-                        alert("请先登录");
-                        window.location.href = "blog_login.html";
-                    }
-                },
-                error: function (err) {
-                }
-            });
+ function getUserInfo(userUrl) {
+    $.ajax({
+        type: "get",
+        url: userUrl,
+        success: function (result) {
+            if (result.code == 200 && result.data != null) {
+                $(".left .card h3").text(result.data.userName);
+                $(".left .card a").attr("href", result.data.githubUrl);
+            }else{
+                alert("请先登录");
+                window.location.href = "blog_login.html";
+            }
+        },
+        error: function (err) {
         }
+    });
+}

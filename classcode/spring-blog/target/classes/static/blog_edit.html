@@ -55,7 +55,7 @@
                     "content": $("#content").val()
                 },
                 success: function (result) {
-                    if (result != null && result.code == 200 && result.data == true) {
+                    if (result.code == 200 && result.data != null) {
                         location.href = "blog_list.html";
                     } else {
                         //alert(result.msg);
@@ -65,6 +65,7 @@
                 error: function (error) {
                     if (error != null && error.status == 401) {
                         alert("用户未登录, 登录后再进行对应操作")
+                        window.location.href = "blog_login.html";
                     }
                 }
             });

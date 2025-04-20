@@ -46,8 +46,8 @@
 
                 </div>
                 <div class="operating">
-                    <button onclick="window.location.href='blog_update.html'">编辑</button>
-                    <button onclick="deleteBlog()">删除</button>
+                    <!-- <button onclick="window.location.href='blog_update.html'">编辑</button>
+                    <button onclick="deleteBlog()">删除</button> -->
                 </div>
             </div>
 
@@ -78,9 +78,15 @@
                         editormd.markdownToHTML("detail", {
                             markdown: blog.content,
                         });
-                    } else {
-                        alert(result.msg);
-                        return;
+                        //显示更新, 删除按钮
+                        if (result.data.loginUser == 1) {
+                            var html = "";
+                            html += '<div class="operating">';
+                            html += '<button onclick = "window.location.href=\'blog_update.html' + location.search + '\'" > 编辑 </button > ';
+                            html += '<button onclick="deleteBlog()">删除</button>';
+                            html += '</div>';
+                            $(".content").append(html);
+                        }
                     }
                 },
                 error: function (error) {
@@ -114,8 +120,21 @@
         //     });
         // }
 
+        
         function deleteBlog() {
-            alert("删除博客");
+            $.ajax({
+                type: "post",
+                url: "/blog/delete" + location.search,
+                success: function (result) {
+                    if (result.data != null && result.code == 200 ) {
+                        alert("删除成功, 即将跳转至博客列表页");
+                        location.href = "blog_list.html"
+                    } else {
+                        alert("删除失败");
+                        console.log(result);
+                    }
+                }
+            });
         }
     </script>
 </body>
