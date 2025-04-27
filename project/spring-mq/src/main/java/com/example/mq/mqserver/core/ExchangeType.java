@@ -14,4 +14,5 @@ public enum ExchangeType {
     public int getType(){
         return type;
     }
+
 }
